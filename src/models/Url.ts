@@ -39,10 +39,10 @@ Url.init({
 
 Url.beforeCreate(async (url, options) => {
   const idStr = new UniqueIdService().generateUniqueId().toString();
-  console.log(idStr);
+
   let idBigInt = BigInt(idStr);
-  console.log(idBigInt);
   url.id = idBigInt;
+
   var digits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   let base = BigInt( digits.length );
@@ -52,8 +52,6 @@ Url.beforeCreate(async (url, options) => {
     result = digits.charAt( Number( idBigInt % base ) ) + result;
     idBigInt = idBigInt / base;
   }
-
-  console.log(result);
 
   url.shortURL = result;
 });

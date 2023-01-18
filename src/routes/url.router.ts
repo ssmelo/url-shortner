@@ -10,7 +10,7 @@ const router = express.Router();
 
 const urlsController = new UrlsController(urlService);
 
+router.get('/:shortURL', urlsController.getLongUrl.bind(urlsController));
 router.post('/shorten', urlsController.createShortUrl.bind(urlsController));
-// router.post('api/v1/shortUrl/shorten',)
 
 export default router;

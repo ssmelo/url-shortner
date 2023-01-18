@@ -4,6 +4,7 @@ import { UrlInput } from "../models/Url";
 import IUrlService from "./interfaces/IUrlService";
 import IUniqueIdService from "./interfaces/IUniqueIdService";
 import UniqueIdService from "./UniqueIdService";
+import UrlGetDto from "../DTOs/UrlGetDto";
 
 export default class UrlService implements IUrlService {
   private readonly urlRepository: IUrlRepository;
@@ -14,12 +15,16 @@ export default class UrlService implements IUrlService {
     this.uniqueIdService = uniqueIdService;
   }
 
+  async getLongUrl(shortURL: string): Promise<string | null> {
+    return await this.urlRepository.getUrlByShortUrl(shortURL);
+  }
+
   async createShortUrl(urlCreationDto: UrlCreationDto): Promise<string> {
     const inputUrl: UrlInput = {
       longURL: urlCreationDto.longURL
     }
     
-    await this.urlRepository.createUrl(inputUrl);
-    return "";
+    const result = await this.urlRepository.createUrl(inputUrl);
+    return result.shortURL;
   }
 }

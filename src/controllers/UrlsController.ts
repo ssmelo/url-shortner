@@ -11,7 +11,11 @@ export default class UrlsController {
 
   async createShortUrl(request: Request, response: Response) {
     const url = await this.urlService.createShortUrl(request.body)
-    // const url = await (new UrlService(new UrlRepository(), new UniqueIdService()).createShortUrl(request.body));
+    return response.json({ url }).status(200);
+  }
+
+  async getLongUrl(request: Request, response: Response) {
+    const url = await this.urlService.getLongUrl(request.params.shortURL)
     return response.json({ url }).status(200);
   }
 }
