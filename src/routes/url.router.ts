@@ -1,4 +1,5 @@
 import express from "express";
+import "express-async-errors"
 import UrlsController from "../controllers/UrlsController";
 import urlService from "../factories/serviceFactory";
 

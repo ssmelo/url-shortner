@@ -5,6 +5,7 @@ import IUrlService from "./interfaces/IUrlService";
 import IUniqueIdService from "./interfaces/IUniqueIdService";
 import UniqueIdService from "./UniqueIdService";
 import UrlGetDto from "../DTOs/UrlGetDto";
+import ErrorResponse from "../DTOs/ErrorResponse";
 
 export default class UrlService implements IUrlService {
   private readonly urlRepository: IUrlRepository;
@@ -20,6 +21,10 @@ export default class UrlService implements IUrlService {
   }
 
   async createShortUrl(urlCreationDto: UrlCreationDto): Promise<string> {
+    const existingLongURL = await this.urlRepository.getUrlByLongUrl(urlCreationDto.longURL);
+    if(existingLongURL)
+      return existingLongURL;
+
     const inputUrl: UrlInput = {
       longURL: urlCreationDto.longURL
     }

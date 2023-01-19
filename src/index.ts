@@ -3,10 +3,11 @@
  */
 
 import * as dotenv from "dotenv";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import urlRoutes from "./routes/url.router";
+import ErrorMiddleware from "./middleware/ErrorMiddleware";
 
 dotenv.config({ path: "./config/.env"});
 
@@ -29,7 +30,13 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
 app.use('/api/v1/shortUrl', urlRoutes);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  ErrorMiddleware.handleError(err, res);
+  next(err);
+})
 
 /**
  * Server Activation

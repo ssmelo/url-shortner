@@ -24,11 +24,13 @@ Url.init({
     primaryKey: true
   },
   shortURL: {
-    type: DataTypes.STRING(2048)
+    type: DataTypes.STRING(2048),
+    unique: true
   },
   longURL: {
     type: DataTypes.STRING(2048),
-    allowNull: false
+    allowNull: false,
+    unique: true
   }
 }, {
   sequelize: sequelizeConn,
