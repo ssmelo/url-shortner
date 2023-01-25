@@ -1,4 +1,3 @@
-import { Model, Sequelize, where } from "sequelize";
 import { Url, UrlInput, UrlOutput } from "../models/Url";
 import IUrlRepository from "./interfaces/IUrlRepository";
 

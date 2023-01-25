@@ -3,21 +3,31 @@ import IUrlRepository from "../repositories/interfaces/IUrlRepository";
 import { UrlInput } from "../models/Url";
 import IUrlService from "./interfaces/IUrlService";
 import IUniqueIdService from "./interfaces/IUniqueIdService";
-import UniqueIdService from "./UniqueIdService";
-import UrlGetDto from "../DTOs/UrlGetDto";
-import ErrorResponse from "../DTOs/ErrorResponse";
+import IUrlCacheRepository from "../repositories/interfaces/IUrlCacheRepository";
 
 export default class UrlService implements IUrlService {
   private readonly urlRepository: IUrlRepository;
+  private readonly cacheRepository: IUrlCacheRepository;
   private readonly uniqueIdService: IUniqueIdService;
 
-  constructor(urlRepository: IUrlRepository, uniqueIdService: IUniqueIdService) {
+  constructor(urlRepository: IUrlRepository, uniqueIdService: IUniqueIdService, cacheRepository: IUrlCacheRepository) {
     this.urlRepository = urlRepository;
     this.uniqueIdService = uniqueIdService;
+    this.cacheRepository = cacheRepository;
   }
 
   async getLongUrl(shortURL: string): Promise<string | null> {
-    return await this.urlRepository.getUrlByShortUrl(shortURL);
+    const cacheUrl = await this.cacheRepository.get(shortURL);
+    if(cacheUrl)
+      return cacheUrl;
+    
+    const urlFromDatabase = await this.urlRepository.getUrlByShortUrl(shortURL);
+    if(urlFromDatabase) {
+      console.log(urlFromDatabase);
+      await this.cacheRepository.setEx(shortURL, urlFromDatabase, 120);
+    }
+      
+    return urlFromDatabase;
   }
 
   async createShortUrl(urlCreationDto: UrlCreationDto): Promise<string> {

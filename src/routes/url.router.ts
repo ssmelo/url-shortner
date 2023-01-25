@@ -1,7 +1,7 @@
 import express from "express";
 import "express-async-errors"
 import UrlsController from "../controllers/UrlsController";
-import urlService from "../factories/serviceFactory";
+import getUrlService from "../factories/serviceFactory";
 
 /**
  * Router Definition
@@ -9,9 +9,11 @@ import urlService from "../factories/serviceFactory";
 
 const router = express.Router();
 
-const urlsController = new UrlsController(urlService);
+(async () => {
+  const urlsController = new UrlsController(await getUrlService());
 
-router.get('/:shortURL', urlsController.getLongUrl.bind(urlsController));
-router.post('/shorten', urlsController.createShortUrl.bind(urlsController));
+  router.get('/:shortURL', urlsController.getLongUrl.bind(urlsController));
+  router.post('/shorten', urlsController.createShortUrl.bind(urlsController));
+})();
 
 export default router;
